@@ -1,4 +1,5 @@
 using Microsoft.AspNetCore.Mvc;
+using System.Collections.Generic;
 using ToDoList.Models;
 
 namespace ToDoList.Controllers
@@ -14,8 +15,23 @@ namespace ToDoList.Controllers
     [Route("/task/list")]
     public ActionResult TaskList()
     {
-      Task newTask = new Task(Request.Query["new-task"]);
+      List<string> allTasks = Task.GetAll();
+      return View(allTasks);
+    }
+
+    [HttpPost("/task/create")]
+    public ActionResult CreateTask()
+    {
+      Task newTask = new Task (Request.Form["new-task"]);
+      newTask.Save();
       return View(newTask);
+    }
+
+    [HttpPost("/task/list/clear")]
+    public ActionResult TaskListClear()
+    {
+      Task.ClearAll();
+      return View();
     }
   }
 }
